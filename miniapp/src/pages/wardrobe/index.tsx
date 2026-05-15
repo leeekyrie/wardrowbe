@@ -59,11 +59,6 @@ export default function 衣橱Page() {
       <PageHeader
         title='衣橱'
         subtitle='浏览单品、筛选状态、快速进入详情。'
-        rightSlot={(
-          <Button className='primary-button' onClick={() => Taro.navigateTo({ url: '/pages/wardrobe/add' })}>
-            添加单品
-          </Button>
-        )}
       />
 
       <Input
@@ -74,6 +69,10 @@ export default function 衣橱Page() {
         onInput={(event) => setSearch(event.detail.value)}
         onConfirm={() => load(1, false)}
       />
+
+      <Button className='primary-button wardrobe-page__add-button' onClick={() => Taro.navigateTo({ url: '/pages/wardrobe/add' })}>
+        添加单品
+      </Button>
 
       <View className='wardrobe-page__toolbar'>
         <View className='wardrobe-page__summary row'>

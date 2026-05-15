@@ -1,7 +1,56 @@
+.suggest-page__context {
+  position: relative;
+  min-height: 214rpx;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+.suggest-page__context-copy {
+  position: relative;
+  z-index: 2;
+  gap: 10rpx;
+  padding-right: 142rpx;
+}
+
+.suggest-page__temperature {
+  color: #101828;
+  font-size: 58rpx;
+  line-height: 1;
+  font-weight: 800;
+}
+
+.suggest-page__weather-mark {
+  position: absolute;
+  right: 28rpx;
+  top: 50%;
+  width: 118rpx;
+  height: 118rpx;
+  margin-top: -59rpx;
+  border-radius: 999rpx;
+  background: #dff6e4;
+}
+
+.suggest-page__weather-arc {
+  position: absolute;
+  left: 26rpx;
+  top: 34rpx;
+  width: 56rpx;
+  height: 36rpx;
+  border: 10rpx solid #082f1b;
+  border-bottom: 0;
+  border-radius: 70rpx 70rpx 0 0;
+}
+
 .suggest-page__occasion {
   overflow: visible;
 }
 
-.suggest-page__cta {
-  gap: 16rpx;
+.suggest-page__submit-card {
+  gap: 24rpx;
+}
+
+.suggest-page__submit-card .primary-button {
+  width: 100%;
+  min-height: 108rpx;
 }

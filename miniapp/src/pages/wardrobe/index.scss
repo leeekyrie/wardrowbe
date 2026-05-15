@@ -1,3 +1,7 @@
+.wardrobe-page__add-button {
+  width: 100%;
+}
+
 .wardrobe-page__toolbar {
   display: flex;
   flex-direction: column;
@@ -23,7 +27,7 @@
 }
 
 .wardrobe-page__chip--clickable {
-  padding: 12rpx 20rpx;
+  padding: 0 22rpx;
   font-weight: 500;
 }
 
@@ -72,8 +76,8 @@
   width: 100%;
   padding: 24rpx;
   box-sizing: border-box;
-  border-radius: 32rpx 32rpx 0 0;
-  background: #f3f4f6;
+  border-radius: 16rpx 16rpx 0 0;
+  background: #f8f5ee;
   box-shadow: 0 -12rpx 40rpx rgba(15, 23, 42, 0.12);
 }
 

@@ -16,8 +16,11 @@ const nextConfig = {
     ignoreDuringBuilds: true,
   },
   async rewrites() {
-    // Use backend hostname for server-side requests (Docker network)
-    const backendUrl = process.env.BACKEND_URL || process.env.NEXT_PUBLIC_API_URL || 'http://backend:8000';
+    const defaultBackendUrl =
+      process.env.NODE_ENV === 'development'
+        ? 'http://localhost:8000'
+        : 'http://backend:8000';
+    const backendUrl = process.env.BACKEND_URL || process.env.NEXT_PUBLIC_API_URL || defaultBackendUrl;
     return [
       {
         source: '/api/v1/:path*',

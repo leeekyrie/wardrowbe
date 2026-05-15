@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="390" height="844" viewBox="0 0 390 844">
+  <defs>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#0f172a" flood-opacity="0.07"/>
+    </filter>
+    <style>
+      text { font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Segoe UI", sans-serif; letter-spacing: 0; }
+      .title { fill: #111827; font-size: 32px; font-weight: 760; }
+      .muted { fill: #667085; font-size: 13px; }
+      .body { fill: #344054; font-size: 14px; }
+      .chip { fill: #344054; font-size: 12px; font-weight: 650; }
+    </style>
+  </defs>
+  <rect width="390" height="844" fill="#edf4ef"/>
+  <rect x="16" y="16" width="358" height="812" rx="26" fill="#f8fbf8"/>
+
+  <text x="30" y="72" class="title">衣橱</text>
+  <text x="30" y="100" class="muted">图片优先浏览，筛选收进底部面板</text>
+  <rect x="318" y="48" width="44" height="44" rx="22" fill="#111827"/>
+  <path d="M330 70h20M340 60v20" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
+
+  <rect x="28" y="126" width="334" height="50" rx="8" fill="#ffffff" filter="url(#shadow)"/>
+  <path d="M52 151a10 10 0 1 0 18 6l8 8" fill="none" stroke="#98a2b3" stroke-width="2" stroke-linecap="round"/>
+  <text x="90" y="157" class="muted">搜索名称、颜色或类型</text>
+
+  <rect x="28" y="194" width="78" height="34" rx="17" fill="#111827"/>
+  <text x="51" y="216" fill="#ffffff" font-size="12" font-weight="700">最新</text>
+  <rect x="116" y="194" width="86" height="34" rx="17" fill="#ffffff"/>
+  <text x="137" y="216" class="chip">收藏</text>
+  <rect x="212" y="194" width="100" height="34" rx="17" fill="#ffffff"/>
+  <text x="232" y="216" class="chip">需清洗</text>
+
+  <rect x="28" y="250" width="158" height="220" rx="8" fill="#ffffff" filter="url(#shadow)"/>
+  <rect x="28" y="250" width="158" height="148" rx="8" fill="#e6ddd2"/>
+  <path d="M78 315c14-30 48-31 62 0l-10 57H88z" fill="#7c8f7a"/>
+  <text x="44" y="426" fill="#111827" font-size="15" font-weight="720">雾绿衬衫</text>
+  <text x="44" y="450" class="muted">上装 · 绿色</text>
+  <rect x="126" y="414" width="44" height="22" rx="11" fill="#ecfdf5"/>
+  <text x="137" y="429" fill="#047857" font-size="10" font-weight="700">可穿</text>
+
+  <rect x="204" y="250" width="158" height="220" rx="8" fill="#ffffff" filter="url(#shadow)"/>
+  <rect x="204" y="250" width="158" height="148" rx="8" fill="#dce7f6"/>
+  <path d="M242 325h82l-10 62h-62z" fill="#263246"/>
+  <text x="220" y="426" fill="#111827" font-size="15" font-weight="720">深蓝直筒裤</text>
+  <text x="220" y="450" class="muted">下装 · 蓝色</text>
+  <rect x="302" y="414" width="44" height="22" rx="11" fill="#ecfdf5"/>
+  <text x="313" y="429" fill="#047857" font-size="10" font-weight="700">可穿</text>
+
+  <rect x="28" y="490" width="158" height="220" rx="8" fill="#ffffff" filter="url(#shadow)"/>
+  <rect x="28" y="490" width="158" height="148" rx="8" fill="#f3e8df"/>
+  <path d="M73 560c20-26 50-25 68 0l-16 62H88z" fill="#d15b45"/>
+  <text x="44" y="666" fill="#111827" font-size="15" font-weight="720">陶土针织衫</text>
+  <text x="44" y="690" class="muted">上装 · 橘红</text>
+
+  <rect x="204" y="490" width="158" height="220" rx="8" fill="#ffffff" filter="url(#shadow)"/>
+  <rect x="204" y="490" width="158" height="148" rx="8" fill="#e9ecef"/>
+  <path d="M256 548h55l13 80h-82z" fill="#111827"/>
+  <text x="220" y="666" fill="#111827" font-size="15" font-weight="720">黑色外套</text>
+  <text x="220" y="690" class="muted">外套 · 黑色</text>
+
+  <rect x="28" y="738" width="334" height="64" rx="8" fill="#ffffff"/>
+  <text x="52" y="778" class="muted">首页</text>
+  <text x="114" y="778" fill="#111827" font-size="12" font-weight="700">衣橱</text>
+  <text x="177" y="778" class="muted">建议</text>
+  <text x="240" y="778" class="muted">穿搭</text>
+  <text x="303" y="778" class="muted">设置</text>
+</svg>

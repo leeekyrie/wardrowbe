@@ -46,8 +46,12 @@ services:
       DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-wardrobe}:${POSTGRES_PASSWORD:-wardrobe}@postgres:5432/${POSTGRES_DB:-wardrobe}
       REDIS_URL: redis://redis:6379/0
       SECRET_KEY: ${SECRET_KEY:-change-me-in-production}
-      CORS_ORIGINS: '["http://localhost:3000", "http://frontend:3000"]'
+      CORS_ORIGINS: ${CORS_ORIGINS:-["http://localhost:3000","http://127.0.0.1:3000","http://frontend:3000","http://localhost:10086","http://127.0.0.1:10086"]}
       STORAGE_PATH: /data/wardrobe
+      QWEATHER_API_HOST: ${QWEATHER_API_HOST:-https://devapi.qweather.com}
+      QWEATHER_API_KEY: ${QWEATHER_API_KEY:-}
+      QWEATHER_JWT: ${QWEATHER_JWT:-}
+      QWEATHER_LANG: ${QWEATHER_LANG:-en}
       OIDC_ISSUER_URL: ${OIDC_ISSUER_URL:-}
       OIDC_CLIENT_ID: ${OIDC_CLIENT_ID:-}
       OIDC_CLIENT_SECRET: ${OIDC_CLIENT_SECRET:-}
@@ -110,6 +114,10 @@ services:
       AI_TEXT_MODEL: ${AI_TEXT_MODEL:-gpt-4o}
       AI_TIMEOUT: ${AI_TIMEOUT:-120}
       AI_MAX_RETRIES: ${AI_MAX_RETRIES:-3}
+      QWEATHER_API_HOST: ${QWEATHER_API_HOST:-https://devapi.qweather.com}
+      QWEATHER_API_KEY: ${QWEATHER_API_KEY:-}
+      QWEATHER_JWT: ${QWEATHER_JWT:-}
+      QWEATHER_LANG: ${QWEATHER_LANG:-en}
       STORAGE_PATH: /data/wardrobe
     volumes:
       - wardrobe_data:/data/wardrobe

@@ -1,3 +1,298 @@
-.home-page__actions-grid > .secondary-button {
-  width: 100%;
+.home-page {
+  gap: 22rpx;
+}
+
+.home-page__hero {
+  position: relative;
+  min-height: 260rpx;
+  padding: 32rpx 166rpx 32rpx 32rpx;
+  border-radius: 16rpx;
+  box-sizing: border-box;
+  background:
+    radial-gradient(circle at 88% 24%, rgba(211, 245, 221, 0.18), transparent 120rpx),
+    #082f1b;
+  color: #ffffff;
+  overflow: hidden;
+  box-shadow: 0 18rpx 46rpx rgba(6, 34, 20, 0.16);
+}
+
+.home-page__hero-copy {
+  position: relative;
+  z-index: 2;
+  gap: 12rpx;
+}
+
+.home-page__hero-label {
+  color: #d8f4de;
+  font-size: 24rpx;
+  font-weight: 700;
+}
+
+.home-page__hero-title {
+  color: #ffffff;
+  font-size: 40rpx;
+  line-height: 1.2;
+  font-weight: 800;
+  letter-spacing: 0;
+}
+
+.home-page__hero-note {
+  color: rgba(255, 255, 255, 0.86);
+  font-size: 25rpx;
+  line-height: 1.45;
+}
+
+.home-page__hero-look {
+  position: absolute;
+  right: 24rpx;
+  bottom: 20rpx;
+  z-index: 1;
+  width: 142rpx;
+  height: 192rpx;
+  border-radius: 999rpx 999rpx 30rpx 30rpx;
+  background: rgba(220, 248, 226, 0.16);
+}
+
+.home-page__hanger {
+  position: absolute;
+  left: 26rpx;
+  top: 0;
+  width: 76rpx;
+  height: 76rpx;
+  border: 12rpx solid #d9f5df;
+  border-bottom: 0;
+  border-radius: 80rpx 80rpx 0 0;
+  opacity: 0.96;
+}
+
+.home-page__shirt {
+  position: absolute;
+  left: 10rpx;
+  top: 44rpx;
+  width: 112rpx;
+  height: 86rpx;
+  border-radius: 24rpx 24rpx 14rpx 14rpx;
+  background: #eff7e9;
+  box-shadow: inset 0 -8rpx 0 rgba(12, 69, 39, 0.08);
+}
+
+.home-page__pants {
+  position: absolute;
+  left: 26rpx;
+  bottom: 0;
+  width: 78rpx;
+  height: 84rpx;
+  border-radius: 12rpx;
+  background: linear-gradient(90deg, #172033 0 46%, transparent 46% 54%, #172033 54% 100%);
+}
+
+.home-page__actions-grid {
+  align-items: stretch;
+}
+
+.home-page__actions-grid > .secondary-button,
+.home-page__actions-grid > .home-page__action-card {
+  width: auto;
+}
+
+.home-page__action-card {
+  min-height: 172rpx;
+  padding: 28rpx;
+  border-radius: 16rpx;
+  border: 0;
+  background: #eee5d5;
+  color: #101828;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 12rpx;
+  box-sizing: border-box;
+  text-align: left;
+  box-shadow: 0 12rpx 30rpx rgba(16, 24, 40, 0.05);
+}
+
+.home-page__action-card::after {
+  border: 0;
+}
+
+.home-page__action-card--primary {
+  background: #101828;
+  color: #ffffff;
+}
+
+.home-page__action-title {
+  font-size: 30rpx;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.home-page__action-subtitle {
+  color: currentColor;
+  opacity: 0.72;
+  font-size: 24rpx;
+  line-height: 1.35;
+}
+
+.home-page__status-card {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22rpx;
+}
+
+.home-page__status-value {
+  display: inline-block;
+  margin-right: 12rpx;
+  color: #101828;
+  font-size: 48rpx;
+  line-height: 1;
+  font-weight: 800;
+}
+
+.home-page__closet-strip {
+  overflow: hidden;
+}
+
+.home-page__garment-row {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16rpx;
+}
+
+.home-page__garment {
+  position: relative;
+  height: 148rpx;
+  border-radius: 16rpx;
+  overflow: hidden;
+  background: #f6f1e8;
+  box-shadow: inset 0 0 0 2rpx rgba(232, 223, 209, 0.72);
+}
+
+.home-page__garment--shirt {
+  background: #edf7ed;
+}
+
+.home-page__garment-shirt-neck {
+  position: absolute;
+  left: 50%;
+  top: 24rpx;
+  width: 44rpx;
+  height: 24rpx;
+  margin-left: -22rpx;
+  border-radius: 0 0 34rpx 34rpx;
+  background: #f8f5ee;
+}
+
+.home-page__garment-shirt-body {
+  position: absolute;
+  left: 22rpx;
+  right: 22rpx;
+  bottom: 22rpx;
+  height: 86rpx;
+  border-radius: 24rpx 24rpx 12rpx 12rpx;
+  background: #ffffff;
+}
+
+.home-page__garment--jacket {
+  background: #e5edf8;
+}
+
+.home-page__garment-jacket-left,
+.home-page__garment-jacket-right {
+  position: absolute;
+  top: 24rpx;
+  bottom: 20rpx;
+  width: 38%;
+  border-radius: 18rpx 18rpx 10rpx 10rpx;
+  background: #566b88;
+}
+
+.home-page__garment-jacket-left {
+  left: 18rpx;
+}
+
+.home-page__garment-jacket-right {
+  right: 18rpx;
+}
+
+.home-page__garment--pants {
+  background: #efe9dc;
+}
+
+.home-page__garment-pants-left,
+.home-page__garment-pants-right {
+  position: absolute;
+  top: 22rpx;
+  bottom: 18rpx;
+  width: 30rpx;
+  border-radius: 12rpx;
+  background: #1b2536;
+}
+
+.home-page__garment-pants-left {
+  left: 34rpx;
+}
+
+.home-page__garment-pants-right {
+  right: 34rpx;
+}
+
+.home-page__garment--shoe {
+  background: #f6eadb;
+}
+
+.home-page__garment-shoe-upper {
+  position: absolute;
+  left: 24rpx;
+  right: 18rpx;
+  bottom: 48rpx;
+  height: 34rpx;
+  border-radius: 38rpx 42rpx 14rpx 14rpx;
+  background: #8b5a3c;
+}
+
+.home-page__garment-shoe-sole {
+  position: absolute;
+  left: 18rpx;
+  right: 18rpx;
+  bottom: 36rpx;
+  height: 14rpx;
+  border-radius: 999rpx;
+  background: #2f241e;
+}
+
+.home-page__insights {
+  gap: 26rpx;
+}
+
+.home-page__insight-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 20rpx;
+}
+
+.home-page__insight-dot {
+  flex: 0 0 auto;
+  width: 14rpx;
+  height: 14rpx;
+  margin-top: 12rpx;
+  border-radius: 999rpx;
+}
+
+.home-page__insight-dot--1 {
+  background: #18a66a;
+}
+
+.home-page__insight-dot--2 {
+  background: #5967f2;
+}
+
+.home-page__insight-dot--3 {
+  background: #f47b20;
+}
+
+.home-page__insight-text {
+  color: #344054;
+  font-size: 26rpx;
+  line-height: 1.45;
 }

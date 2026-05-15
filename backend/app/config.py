@@ -27,10 +27,22 @@ class Settings(BaseSettings):
     cors_origins: list[str] = Field(
         default=[
             "http://localhost:3000",
+            "http://127.0.0.1:3000",
             "http://localhost:8081",
             "http://localhost:10086",
             "http://127.0.0.1:10086",
         ]
+    )
+    cors_origin_regex: str | None = Field(
+        default=(
+            r"^https?://("
+            r"localhost|127\.0\.0\.1|"
+            r"10(?:\.\d{1,3}){3}|"
+            r"192\.168(?:\.\d{1,3}){2}|"
+            r"172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2}|"
+            r"100\.(?:6[4-9]|[7-9]\d|1[01]\d|12[0-7])(?:\.\d{1,3}){2}"
+            r")(?::\d+)?$"
+        )
     )
 
     # Database
@@ -58,7 +70,10 @@ class Settings(BaseSettings):
     ai_max_tokens: int = Field(default=8000)
 
     # Weather
-    openmeteo_url: str = Field(default="https://api.open-meteo.com/v1")
+    qweather_api_host: str = Field(default="https://devapi.qweather.com")
+    qweather_api_key: str | None = Field(default=None)
+    qweather_jwt: str | None = Field(default=None)
+    qweather_lang: str = Field(default="en")
 
     # Notifications - default ntfy channel (used when user has none configured)
     ntfy_server: str | None = None

@@ -20,8 +20,7 @@ export default function FilterSheet({ value, onChange }: FilterSheetProps) {
       <View className='row'>
         <Text className='section-title'>筛选</Text>
         <Button
-          className='secondary-button'
-          size='mini'
+          className='secondary-button filter-sheet__reset'
           onClick={() =>
             onChange({
               ...value,

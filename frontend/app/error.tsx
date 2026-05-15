@@ -24,7 +24,6 @@ export default function GlobalError({
         <h1 className="text-2xl font-bold mb-2">Something went wrong</h1>
         <p className="text-muted-foreground mb-6">
           发生了意外错误，请重试；如果问题仍然存在，请联系支持。
-          
         </p>
         <div className="flex gap-3 justify-center">
           <Button variant="outline" onClick={() => window.location.href = '/'}>

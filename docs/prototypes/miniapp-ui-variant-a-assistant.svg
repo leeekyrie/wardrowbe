@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="390" height="844" viewBox="0 0 390 844">
+  <defs>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#0f172a" flood-opacity="0.08"/>
+    </filter>
+    <style>
+      text { font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Segoe UI", sans-serif; letter-spacing: 0; }
+      .muted { fill: #667085; font-size: 13px; }
+      .title { fill: #101828; font-size: 30px; font-weight: 760; }
+      .section { fill: #101828; font-size: 15px; font-weight: 700; }
+      .body { fill: #344054; font-size: 14px; }
+      .small { fill: #667085; font-size: 12px; }
+    </style>
+  </defs>
+  <rect width="390" height="844" fill="#f7f3ea"/>
+  <rect x="16" y="16" width="358" height="812" rx="26" fill="#fbfaf7"/>
+
+  <text x="32" y="62" class="muted">欢迎回来</text>
+  <text x="32" y="99" class="title">今天穿什么</text>
+  <text x="32" y="126" class="body">上海 23C · 多云 · 通勤模式</text>
+  <circle cx="342" cy="78" r="22" fill="#111827"/>
+  <path d="M333 79h18M342 70v18" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/>
+
+  <rect x="28" y="154" width="334" height="132" rx="8" fill="#102018" filter="url(#shadow)"/>
+  <text x="48" y="188" fill="#b7e4c4" font-size="13" font-weight="700">今日建议</text>
+  <text x="48" y="222" fill="#ffffff" font-size="24" font-weight="760">亚麻衬衫 + 深色直筒裤</text>
+  <text x="48" y="252" fill="#d6eadb" font-size="13">体感偏暖，外套可选薄款防风夹克</text>
+  <rect x="292" y="178" width="46" height="46" rx="23" fill="#dff7e8"/>
+  <path d="M303 202c8-17 22-17 28 0" fill="none" stroke="#102018" stroke-width="3" stroke-linecap="round"/>
+
+  <rect x="28" y="304" width="158" height="86" rx="8" fill="#111827"/>
+  <text x="48" y="339" fill="#ffffff" font-size="16" font-weight="720">生成穿搭</text>
+  <text x="48" y="365" fill="#d0d5dd" font-size="12">一键匹配天气和场景</text>
+  <rect x="204" y="304" width="158" height="86" rx="8" fill="#e7dfcf"/>
+  <text x="224" y="339" fill="#111827" font-size="16" font-weight="720">添加单品</text>
+  <text x="224" y="365" fill="#5b6472" font-size="12">拍照录入衣橱</text>
+
+  <rect x="28" y="414" width="334" height="92" rx="8" fill="#ffffff" filter="url(#shadow)"/>
+  <text x="48" y="449" class="section">快速状态</text>
+  <text x="48" y="478" fill="#101828" font-size="28" font-weight="760">4</text>
+  <text x="76" y="475" class="small">待反馈穿搭</text>
+  <text x="230" y="478" fill="#101828" font-size="28" font-weight="760">38</text>
+  <text x="270" y="475" class="small">衣橱单品</text>
+
+  <rect x="28" y="528" width="334" height="180" rx="8" fill="#ffffff" filter="url(#shadow)"/>
+  <text x="48" y="563" class="section">衣橱洞察</text>
+  <circle cx="52" cy="594" r="4" fill="#18a058"/>
+  <text x="68" y="599" class="body">3 件单品本周还没穿过</text>
+  <circle cx="52" cy="631" r="4" fill="#5167f6"/>
+  <text x="68" y="636" class="body">黑白灰占比高，可补低饱和蓝</text>
+  <circle cx="52" cy="668" r="4" fill="#f97316"/>
+  <text x="68" y="673" class="body">周五有降温，提前准备叠穿</text>
+
+  <rect x="28" y="738" width="334" height="64" rx="8" fill="#ffffff"/>
+  <text x="52" y="778" fill="#111827" font-size="12" font-weight="700">首页</text>
+  <text x="114" y="778" class="small">衣橱</text>
+  <text x="177" y="778" class="small">建议</text>
+  <text x="240" y="778" class="small">穿搭</text>
+  <text x="303" y="778" class="small">设置</text>
+</svg>

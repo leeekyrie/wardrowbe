@@ -1,9 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+const DEFAULT_BACKEND_URL =
+  process.env.NODE_ENV === 'development'
+    ? 'http://localhost:8000'
+    : 'http://backend:8000';
+
 const BACKEND_URL =
   process.env.BACKEND_URL ||
   process.env.NEXT_PUBLIC_API_URL ||
-  'http://backend:8000';
+  DEFAULT_BACKEND_URL;
 
 export async function POST(request: NextRequest) {
   const body = await request.text();

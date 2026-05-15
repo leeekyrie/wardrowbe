@@ -18,7 +18,7 @@ LOCAL_DATABASE_URL=${LOCAL_DATABASE_URL:-"postgresql+asyncpg://${LOCAL_PG_USER}@
 LOCAL_REDIS_URL=${LOCAL_REDIS_URL:-"redis://localhost:6379/0"}
 LOCAL_BACKEND_PID=""
 USE_DOCKER=0
-LOCAL_CORS_ORIGINS_JSON=$(printf '["http://localhost:3000","http://localhost:%s","http://127.0.0.1:%s"]' "$TARO_WEB_PORT" "$TARO_WEB_PORT")
+LOCAL_CORS_ORIGINS_JSON=$(printf '["http://localhost:3000","http://127.0.0.1:3000","http://localhost:%s","http://127.0.0.1:%s"]' "$TARO_WEB_PORT" "$TARO_WEB_PORT")
 
 usage() {
   cat <<EOF
@@ -117,7 +117,11 @@ AI_BASE_URL=http://host.docker.internal:11434/v1
 AI_API_KEY=not-needed
 AI_VISION_MODEL=llava:7b
 AI_TEXT_MODEL=gemma3:latest
-CORS_ORIGINS=["http://localhost:3000","http://frontend:3000","http://localhost:${TARO_WEB_PORT}","http://127.0.0.1:${TARO_WEB_PORT}"]
+QWEATHER_API_HOST=https://devapi.qweather.com
+QWEATHER_API_KEY=
+QWEATHER_JWT=
+QWEATHER_LANG=en
+CORS_ORIGINS=["http://localhost:3000","http://127.0.0.1:3000","http://frontend:3000","http://localhost:${TARO_WEB_PORT}","http://127.0.0.1:${TARO_WEB_PORT}"]
 EOF
 }
 

@@ -8,6 +8,8 @@ export interface OutfitFilters {
   occasion?: string
   source?: string
   search?: string
+  date_from?: string
+  date_to?: string
   is_lookbook?: boolean
   is_replacement?: boolean
 }
@@ -21,6 +23,8 @@ export function getOutfits(filters: OutfitFilters = {}) {
       occasion: filters.occasion,
       source: filters.source,
       search: filters.search,
+      date_from: filters.date_from,
+      date_to: filters.date_to,
       is_lookbook: filters.is_lookbook,
       is_replacement: filters.is_replacement,
     },

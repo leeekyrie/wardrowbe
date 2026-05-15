@@ -10,6 +10,11 @@ interface OIDCProfile {
   picture?: string;
 }
 
+const DEFAULT_BACKEND_URL =
+  process.env.NODE_ENV === 'development'
+    ? 'http://localhost:8000'
+    : 'http://backend:8000';
+
 const OIDCProvider: OAuthConfig<OIDCProfile> = {
   id: 'oidc',
   name: 'SSO',
@@ -78,7 +83,7 @@ export const authOptions: NextAuthOptions = {
   providers: getProviders(),
   callbacks: {
     async jwt({ token, user, account, trigger }) {
-      const apiUrl = process.env.BACKEND_URL || process.env.NEXT_PUBLIC_API_URL || 'http://backend:8000';
+      const apiUrl = process.env.BACKEND_URL || process.env.NEXT_PUBLIC_API_URL || DEFAULT_BACKEND_URL;
 
       // Session update triggered - refresh user data from backend
       if (trigger === 'update' && token.accessToken) {

@@ -1,0 +1,1295 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Wardrowbe Miniapp Interactive Prototype</title>
+  <style>
+    :root {
+      --ink: #101827;
+      --ink-soft: #263247;
+      --muted: #667085;
+      --faint: #8a94a6;
+      --paper: #fbfaf7;
+      --wash: #f3efe7;
+      --card: #ffffff;
+      --line: #ebe7dd;
+      --forest: #0b2b1a;
+      --forest-soft: #dff6e6;
+      --night: #111827;
+      --sand: #e8dfcf;
+      --blue: #5468ff;
+      --orange: #f97316;
+      --green: #16a05d;
+      --danger: #c2410c;
+      --shadow: 0 18px 42px rgba(29, 23, 14, 0.08);
+      --shadow-tight: 0 10px 22px rgba(29, 23, 14, 0.07);
+      --radius: 8px;
+      --tap: 48px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 18% 8%, rgba(255, 255, 255, 0.9) 0 120px, transparent 121px),
+        linear-gradient(145deg, #eee8dc 0%, #f8f4ec 42%, #ede7da 100%);
+      font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      letter-spacing: 0;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    button {
+      border: 0;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .stage {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: minmax(0, 390px) minmax(280px, 420px);
+      gap: 40px;
+      align-items: center;
+      justify-content: center;
+      padding: 32px;
+    }
+
+    .phone {
+      width: min(100%, 390px);
+      height: min(844px, calc(100vh - 40px));
+      min-height: 720px;
+      border-radius: 28px;
+      overflow: hidden;
+      background: var(--paper);
+      box-shadow: 0 24px 70px rgba(30, 22, 12, 0.18);
+      position: relative;
+      border: 1px solid rgba(255, 255, 255, 0.8);
+    }
+
+    .app {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      background: linear-gradient(180deg, var(--paper), #f6f2ea);
+    }
+
+    .screen {
+      display: none;
+      flex: 1;
+      overflow-y: auto;
+      padding: 32px 12px 180px;
+      scrollbar-width: none;
+    }
+
+    .screen::-webkit-scrollbar {
+      display: none;
+    }
+
+    .screen.active {
+      display: block;
+      animation: rise 260ms ease both;
+    }
+
+    @keyframes rise {
+      from {
+        transform: translateY(8px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .stack {
+      display: grid;
+      gap: 20px;
+    }
+
+    .screen.stack {
+      display: none;
+    }
+
+    .screen.active.stack {
+      display: grid;
+    }
+
+    .header {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      align-items: start;
+      min-height: 86px;
+      padding: 0 86px 0 4px;
+    }
+
+    .phone::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 72px;
+      height: 92px;
+      pointer-events: none;
+      z-index: 70;
+    }
+
+    .eyebrow {
+      display: block;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.25;
+      margin-bottom: 6px;
+    }
+
+    h1,
+    h2,
+    p {
+      margin: 0;
+    }
+
+    h1 {
+      font-size: 34px;
+      line-height: 1.03;
+      font-weight: 850;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      font-size: 16px;
+      line-height: 1.25;
+      font-weight: 780;
+    }
+
+    .subtitle,
+    .muted {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .icon-button {
+      width: var(--tap);
+      height: var(--tap);
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      background: var(--night);
+      transition: transform 160ms ease, background 160ms ease;
+    }
+
+    .icon-button:active {
+      transform: scale(0.94);
+      background: #273142;
+    }
+
+    .icon-button svg {
+      width: 27px;
+      height: 27px;
+      stroke-width: 2.4;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-tight);
+      padding: 20px;
+    }
+
+    .hero-card {
+      min-height: 132px;
+      color: #fff;
+      background: var(--forest);
+      box-shadow: none;
+      position: relative;
+      overflow: hidden;
+      display: grid;
+      align-content: center;
+      gap: 12px;
+      padding-right: 116px;
+    }
+
+    .hero-look {
+      position: absolute;
+      right: 18px;
+      top: 24px;
+      width: 76px;
+      height: 84px;
+    }
+
+    .hero-look__disc,
+    .hero-look__tile {
+      position: absolute;
+      border-radius: 50%;
+      background: var(--forest-soft);
+      display: grid;
+      place-items: center;
+    }
+
+    .hero-look__disc {
+      right: 0;
+      top: 0;
+      width: 54px;
+      height: 54px;
+    }
+
+    .hero-look__tile {
+      left: 0;
+      bottom: 0;
+      width: 50px;
+      height: 50px;
+      background: #f7f3ea;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.16);
+    }
+
+    .hero-look svg {
+      width: 36px;
+      height: 36px;
+    }
+
+    .hero-look__disc svg {
+      width: 38px;
+      height: 38px;
+    }
+
+    .hero-look__disc::after {
+      content: "";
+      position: absolute;
+      left: 12px;
+      bottom: 12px;
+      width: 27px;
+      height: 16px;
+      border: 4px solid var(--forest);
+      border-bottom: 0;
+      border-radius: 30px 30px 0 0;
+    }
+
+    .hero-card .label {
+      color: #bdeccb;
+      font-size: 13px;
+      font-weight: 780;
+    }
+
+    .hero-card .headline {
+      color: #fff;
+      font-size: 23px;
+      line-height: 1.2;
+      font-weight: 850;
+    }
+
+    .hero-card .note {
+      color: #d8eadc;
+      font-size: 13px;
+      font-weight: 620;
+    }
+
+    .action-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .action-card {
+      min-height: 86px;
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      text-align: left;
+      display: grid;
+      align-content: center;
+      gap: 9px;
+      transition: transform 160ms ease, box-shadow 160ms ease;
+    }
+
+    .action-card:active {
+      transform: translateY(2px) scale(0.99);
+    }
+
+    .action-card.primary {
+      color: #fff;
+      background: var(--night);
+    }
+
+    .action-card.secondary {
+      color: var(--ink);
+      background: var(--sand);
+    }
+
+    .action-card strong {
+      font-size: 17px;
+      line-height: 1.2;
+    }
+
+    .action-card span {
+      color: currentColor;
+      opacity: 0.72;
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      align-items: end;
+    }
+
+    .home-gallery {
+      display: grid;
+      gap: 14px;
+    }
+
+    .image-strip {
+      display: grid;
+      grid-template-columns: 1.25fr 0.85fr 0.85fr;
+      gap: 12px;
+      min-height: 122px;
+    }
+
+    .closet-shot {
+      min-height: 122px;
+      border-radius: var(--radius);
+      background:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.42), transparent),
+        #e7dfd2;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .closet-shot svg {
+      width: 96%;
+      height: 96%;
+    }
+
+    .mini-piece {
+      min-height: 122px;
+      border-radius: var(--radius);
+      display: grid;
+      place-items: center;
+      background: #fff;
+      box-shadow: inset 0 0 0 1px rgba(235, 231, 221, 0.8);
+    }
+
+    .mini-piece svg {
+      width: 64px;
+      height: 64px;
+    }
+
+    .stat strong {
+      font-size: 32px;
+      line-height: 1;
+      font-weight: 850;
+      margin-right: 6px;
+    }
+
+    .stat span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .insights {
+      display: grid;
+      gap: 20px;
+      min-height: 180px;
+    }
+
+    .insight {
+      display: grid;
+      grid-template-columns: 8px minmax(0, 1fr);
+      gap: 12px;
+      align-items: center;
+      color: var(--ink-soft);
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+    }
+
+    .dot.blue {
+      background: var(--blue);
+    }
+
+    .dot.orange {
+      background: var(--orange);
+    }
+
+    .tabbar {
+      position: absolute;
+      left: 18px;
+      right: 18px;
+      bottom: 22px;
+      height: 66px;
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.92);
+      box-shadow: 0 12px 28px rgba(24, 18, 10, 0.08);
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      align-items: center;
+      backdrop-filter: blur(14px);
+      z-index: 20;
+      isolation: isolate;
+    }
+
+    .tabbar::before {
+      content: "";
+      position: absolute;
+      left: -18px;
+      right: -18px;
+      top: -20px;
+      bottom: -24px;
+      border-radius: 16px;
+      background: linear-gradient(180deg, rgba(251, 250, 247, 0.72), var(--paper) 34%);
+      z-index: -1;
+    }
+
+    .tab {
+      min-height: var(--tap);
+      color: var(--muted);
+      background: transparent;
+      display: grid;
+      place-items: center;
+      gap: 3px;
+      font-size: 12px;
+      transition: color 150ms ease, transform 150ms ease;
+    }
+
+    .tab svg {
+      width: 19px;
+      height: 19px;
+      stroke-width: 2;
+    }
+
+    .tab.active {
+      color: var(--ink);
+      font-weight: 750;
+    }
+
+    .tab:active {
+      transform: translateY(1px);
+    }
+
+    .search {
+      width: 100%;
+      min-height: 48px;
+      border: 0;
+      outline: 0;
+      color: var(--ink);
+      background: #fff;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-tight);
+      padding: 0 18px;
+    }
+
+    select.search {
+      appearance: none;
+      background-image:
+        linear-gradient(45deg, transparent 50%, var(--ink) 50%),
+        linear-gradient(135deg, var(--ink) 50%, transparent 50%);
+      background-position:
+        calc(100% - 24px) 52%,
+        calc(100% - 16px) 52%;
+      background-size: 8px 8px, 8px 8px;
+      background-repeat: no-repeat;
+      padding-right: 46px;
+    }
+
+    .chips {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      overflow-x: auto;
+      padding: 3px 1px 5px;
+      min-height: 44px;
+      scrollbar-width: none;
+    }
+
+    .chips::-webkit-scrollbar {
+      display: none;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 36px;
+      flex: 0 0 auto;
+      border-radius: 18px;
+      padding: 0 16px;
+      color: var(--ink-soft);
+      background: #fff;
+      border: 1px solid transparent;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .chip.active {
+      color: #fff;
+      background: var(--night);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .item-card {
+      min-height: 212px;
+      overflow: hidden;
+      padding: 0;
+      text-align: left;
+      background: #fff;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-tight);
+      transition: transform 160ms ease;
+    }
+
+    .item-card:active {
+      transform: scale(0.985);
+    }
+
+    .item-art {
+      height: 126px;
+      display: grid;
+      place-items: center;
+      background: #e8ddd2;
+      position: relative;
+    }
+
+    .item-art svg {
+      width: 86px;
+      height: 86px;
+    }
+
+    .item-body {
+      padding: 14px;
+      display: grid;
+      gap: 7px;
+    }
+
+    .item-body strong {
+      overflow: hidden;
+      color: var(--ink);
+      font-size: 14px;
+      line-height: 1.2;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .item-body span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .badge {
+      width: fit-content;
+      border-radius: 99px;
+      padding: 5px 9px;
+      color: #047857;
+      background: #ecfdf5;
+      font-size: 11px;
+      font-weight: 760;
+    }
+
+    .badge.warn {
+      color: var(--danger);
+      background: #fff7ed;
+    }
+
+    .context {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 14px;
+      align-items: center;
+    }
+
+    .temp {
+      font-size: 30px;
+      line-height: 1;
+      font-weight: 850;
+    }
+
+    .weather-mark {
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      background: #eef2ff;
+      display: grid;
+      place-items: center;
+      color: var(--blue);
+    }
+
+    .field {
+      display: grid;
+      gap: 8px;
+    }
+
+    .field label {
+      color: var(--ink);
+      font-size: 13px;
+      font-weight: 720;
+    }
+
+    .field input,
+    .field select {
+      width: 100%;
+      height: 48px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 0 13px;
+      color: var(--ink);
+      background: #fbfaf7;
+      outline: 0;
+    }
+
+    .bottom-cta {
+      display: grid;
+      gap: 10px;
+      padding: 0;
+    }
+
+    .primary-button {
+      width: 100%;
+      min-height: 54px;
+      border-radius: 12px;
+      color: #fff;
+      background: var(--night);
+      font-weight: 820;
+      box-shadow: 0 14px 28px rgba(17, 24, 39, 0.18);
+      transition: transform 160ms ease, box-shadow 160ms ease;
+    }
+
+    .primary-button:active {
+      transform: translateY(2px);
+      box-shadow: 0 8px 16px rgba(17, 24, 39, 0.16);
+    }
+
+    .secondary-button {
+      min-height: var(--tap);
+      border-radius: 12px;
+      padding: 0 16px;
+      color: var(--ink);
+      background: #ece7dd;
+      font-weight: 760;
+    }
+
+    .outfit-card {
+      display: grid;
+      gap: 14px;
+      text-align: left;
+    }
+
+    .outfit-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .thumbs {
+      display: flex;
+      gap: 10px;
+    }
+
+    .thumb {
+      width: 56px;
+      height: 56px;
+      border-radius: var(--radius);
+      background: #e8ddd2;
+      display: grid;
+      place-items: center;
+    }
+
+    .thumb svg {
+      width: 34px;
+      height: 34px;
+    }
+
+    .result-panel {
+      display: none;
+      gap: 18px;
+    }
+
+    .result-panel.active {
+      display: grid;
+    }
+
+    .sheet-mask {
+      position: absolute;
+      inset: 0;
+      display: none;
+      align-items: end;
+      background: rgba(16, 24, 39, 0.34);
+      z-index: 40;
+    }
+
+    .sheet-mask.open {
+      display: flex;
+    }
+
+    .sheet {
+      width: 100%;
+      max-height: 82%;
+      overflow-y: auto;
+      border-radius: 22px 22px 0 0;
+      background: var(--paper);
+      padding: 18px 16px 26px;
+      box-shadow: 0 -20px 60px rgba(16, 24, 39, 0.2);
+      animation: sheetUp 220ms ease both;
+    }
+
+    @keyframes sheetUp {
+      from {
+        transform: translateY(28px);
+      }
+      to {
+        transform: translateY(0);
+      }
+    }
+
+    .sheet-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .close {
+      width: 40px;
+      height: 40px;
+      border-radius: 20px;
+      color: var(--ink);
+      background: #ece7dd;
+      font-size: 20px;
+    }
+
+    .upload-box {
+      height: 170px;
+      border: 1.5px dashed #d4ccbd;
+      border-radius: var(--radius);
+      display: grid;
+      place-items: center;
+      color: var(--muted);
+      background: #fff;
+      text-align: center;
+      line-height: 1.5;
+    }
+
+    .toast {
+      position: absolute;
+      left: 50%;
+      bottom: 106px;
+      transform: translateX(-50%) translateY(12px);
+      min-width: 170px;
+      padding: 12px 16px;
+      border-radius: 14px;
+      color: #fff;
+      background: rgba(17, 24, 39, 0.92);
+      text-align: center;
+      font-size: 13px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 180ms ease, transform 180ms ease;
+      z-index: 60;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .side-note {
+      align-self: center;
+      color: #3d3328;
+    }
+
+    .side-note h2 {
+      margin-bottom: 12px;
+      font-size: 22px;
+    }
+
+    .side-note p {
+      max-width: 34ch;
+      color: #625848;
+      line-height: 1.7;
+      font-size: 14px;
+    }
+
+    .side-note ul {
+      margin: 20px 0 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 10px;
+      color: #4d4335;
+      font-size: 14px;
+    }
+
+    .side-note li::before {
+      content: "";
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      margin-right: 10px;
+      border-radius: 50%;
+      background: var(--forest);
+      vertical-align: middle;
+    }
+
+    @media (max-width: 860px) {
+      .stage {
+        grid-template-columns: minmax(0, 390px);
+        padding: 20px;
+      }
+
+      .side-note {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="stage">
+    <section class="phone" aria-label="Wardrowbe interactive mobile prototype">
+      <div class="app">
+        <section class="screen active stack" data-screen="home">
+          <header class="header">
+            <div>
+              <span class="eyebrow">欢迎回来</span>
+              <h1>今天穿什么</h1>
+              <p class="subtitle">上海 23C · 多云 · 通勤模式</p>
+            </div>
+          </header>
+
+          <article class="card hero-card">
+            <span class="label">今日建议</span>
+            <strong class="headline">亚麻衬衫 + 深色直筒裤</strong>
+            <span class="note">体感偏暖，外套可选薄款防风夹克</span>
+            <span class="hero-look" aria-hidden="true">
+              <span class="hero-look__disc"></span>
+              <span class="hero-look__tile">
+                <svg viewBox="0 0 100 100"><path d="M28 17h44l10 70H59L50 39l-9 48H18z" fill="#263246"/></svg>
+              </span>
+            </span>
+          </article>
+
+          <div class="action-grid">
+            <button class="action-card primary" type="button" data-generate>
+              <strong>生成穿搭</strong>
+              <span>一键匹配天气和场景</span>
+            </button>
+            <button class="action-card secondary" type="button" data-open-sheet="add">
+              <strong>添加单品</strong>
+              <span>拍照录入衣橱</span>
+            </button>
+          </div>
+
+          <article class="card">
+            <h2>快速状态</h2>
+            <div class="stats" style="margin-top: 10px;">
+              <div class="stat"><strong id="pendingCount">4</strong><span>待反馈穿搭</span></div>
+              <div class="stat"><strong id="wardrobeCount">38</strong><span>衣橱单品</span></div>
+            </div>
+          </article>
+
+          <article class="card home-gallery">
+            <h2>今日可选</h2>
+            <div class="image-strip">
+              <div class="closet-shot" aria-label="衣橱预览">
+                <svg viewBox="0 0 180 120" role="img" aria-label="多件衣服挂在衣橱里">
+                  <rect x="16" y="20" width="148" height="82" rx="10" fill="#f8f5ed"/>
+                  <path d="M34 33h112" stroke="#c8bda9" stroke-width="4" stroke-linecap="round"/>
+                  <path d="M45 33c11 13 11 38 1 57h28c-8-21-7-44 3-57" fill="#7c8f7a"/>
+                  <path d="M83 33l8 57h24l8-57" fill="#263246"/>
+                  <path d="M131 33c8 15 9 37 2 57h25c-5-23-4-42 4-57" fill="#d15b45"/>
+                </svg>
+              </div>
+              <div class="mini-piece" aria-label="亚麻衬衫">
+                <svg viewBox="0 0 100 100"><path d="M25 27 38 17h24l13 10-9 16-8-5v43H42V38l-8 5z" fill="#7c8f7a"/></svg>
+              </div>
+              <div class="mini-piece" aria-label="深色直筒裤">
+                <svg viewBox="0 0 100 100"><path d="M28 17h44l10 70H59L50 39l-9 48H18z" fill="#263246"/></svg>
+              </div>
+            </div>
+          </article>
+
+          <article class="card insights">
+            <h2>衣橱洞察</h2>
+            <div class="insight"><i class="dot"></i><span>3 件单品本周还没穿过</span></div>
+            <div class="insight"><i class="dot blue"></i><span>黑白灰占比高，可补低饱和蓝</span></div>
+            <div class="insight"><i class="dot orange"></i><span>周五有降温，提前准备叠穿</span></div>
+          </article>
+        </section>
+
+        <section class="screen stack" data-screen="wardrobe">
+          <header class="header">
+            <div>
+              <span class="eyebrow">图片优先浏览</span>
+              <h1>衣橱</h1>
+              <p class="subtitle">筛选状态、搜索颜色，快速进入详情</p>
+            </div>
+          </header>
+          <input class="search" id="wardrobeSearch" type="search" placeholder="搜索名称、颜色或类型">
+          <div class="chips" role="list" aria-label="衣橱筛选">
+            <button class="chip active" type="button" data-filter="all">全部</button>
+            <button class="chip" type="button" data-filter="ready">可穿</button>
+            <button class="chip" type="button" data-filter="favorite">收藏</button>
+            <button class="chip" type="button" data-filter="wash">需清洗</button>
+          </div>
+          <button class="secondary-button" type="button" data-open-sheet="add">添加单品</button>
+          <div class="grid" id="wardrobeGrid"></div>
+        </section>
+
+        <section class="screen stack" data-screen="suggest">
+          <header class="header">
+            <span class="eyebrow">穿搭建议</span>
+            <h1>生成今天的搭配</h1>
+            <p class="subtitle">选择场景后生成，结果会优先考虑天气和可穿状态</p>
+          </header>
+          <article class="card context">
+            <div>
+              <h2>上下文</h2>
+              <p class="temp" style="margin-top: 8px;">23C</p>
+              <p class="muted">多云 · 浦东新区</p>
+            </div>
+            <div class="weather-mark">
+              <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 16h12a4 4 0 0 0 0-8 6 6 0 0 0-11.3 2"/></svg>
+            </div>
+          </article>
+          <article class="card stack" style="gap: 14px;">
+            <h2>场景</h2>
+            <div class="chips" id="occasionChips">
+              <button class="chip active" type="button">通勤</button>
+              <button class="chip" type="button">休闲</button>
+              <button class="chip" type="button">约会</button>
+              <button class="chip" type="button">正式</button>
+              <button class="chip" type="button">户外</button>
+            </div>
+          </article>
+          <article class="card field">
+            <label for="tempOverride">可选：覆盖体感温度</label>
+            <input id="tempOverride" inputmode="numeric" placeholder="例如 18">
+            <p class="muted">天气与体感差异较大时再填写。</p>
+          </article>
+          <div class="bottom-cta">
+            <p class="muted">确认场景和体感后，生成一套可反馈的穿搭建议。</p>
+            <button class="primary-button" type="button" data-generate>生成穿搭</button>
+          </div>
+        </section>
+
+        <section class="screen stack" data-screen="outfits">
+          <header class="header">
+            <span class="eyebrow">穿搭记录</span>
+            <h1>穿搭</h1>
+            <p class="subtitle">浏览、筛选并处理历史穿搭建议</p>
+          </header>
+          <input class="search" type="search" placeholder="搜索穿搭">
+          <div class="chips" id="outfitFilters">
+            <button class="chip active" type="button">全部</button>
+            <button class="chip" type="button">已接受</button>
+            <button class="chip" type="button">待反馈</button>
+            <button class="chip" type="button">收藏</button>
+          </div>
+          <select class="search" aria-label="月份筛选">
+            <option>全部月份</option>
+            <option>2026年5月</option>
+            <option>2026年4月</option>
+          </select>
+          <div id="outfitList" class="stack"></div>
+        </section>
+
+        <section class="screen stack" data-screen="settings">
+          <header class="header">
+            <span class="eyebrow">连接与偏好</span>
+            <h1>设置</h1>
+            <p class="subtitle">保持调试项可见，但让保存动作更明确</p>
+          </header>
+          <article class="card stack">
+            <h2>连接与账号</h2>
+            <div class="field">
+              <label for="apiUrl">API Base URL</label>
+              <input id="apiUrl" value="http://localhost:8000">
+            </div>
+            <p class="muted">当前 Token：eyJhbGciOi...</p>
+          </article>
+          <article class="card stack">
+            <h2>个人资料</h2>
+            <div class="field"><label for="name">显示名称</label><input id="name" value="Kyrie"></div>
+            <div class="field"><label for="location">位置</label><input id="location" value="上海"></div>
+          </article>
+          <article class="card stack">
+            <h2>偏好</h2>
+            <div class="field">
+              <label for="occasion">默认场景</label>
+              <select id="occasion"><option>通勤</option><option>休闲</option><option>正式</option></select>
+            </div>
+            <div class="field">
+              <label for="unit">温度单位</label>
+              <select id="unit"><option>Celsius</option><option>Fahrenheit</option></select>
+            </div>
+          </article>
+          <button class="primary-button" type="button" data-toast="设置已保存">保存设置</button>
+        </section>
+      </div>
+
+      <nav class="tabbar" aria-label="主导航">
+        <button class="tab active" type="button" data-tab="home">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m4 11 8-7 8 7v8a1 1 0 0 1-1 1h-5v-6H10v6H5a1 1 0 0 1-1-1z"/></svg>
+          首页
+        </button>
+        <button class="tab" type="button" data-tab="wardrobe">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 6a2 2 0 1 0-2-2M12 6v3l-7 5v2h14v-2l-7-5"/></svg>
+          衣橱
+        </button>
+        <button class="tab" type="button" data-tab="suggest">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m14 4 1 4 4 1-4 1-1 4-1-4-4-1 4-1zM6 14l.7 2.3L9 17l-2.3.7L6 20l-.7-2.3L3 17l2.3-.7z"/></svg>
+          建议
+        </button>
+        <button class="tab" type="button" data-tab="outfits">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="4" y="5" width="16" height="14" rx="2"/><path d="M8 9h8M8 13h5"/></svg>
+          穿搭
+        </button>
+        <button class="tab" type="button" data-tab="settings">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"/><path d="M19 12a7.2 7.2 0 0 0-.1-1l2-1.5-2-3.4-2.4 1a8.3 8.3 0 0 0-1.8-1L12.3 3h-4l-.4 3.1a8.3 8.3 0 0 0-1.8 1l-2.4-1-2 3.4 2 1.5a7.2 7.2 0 0 0 0 2l-2 1.5 2 3.4 2.4-1a8.3 8.3 0 0 0 1.8 1l.4 3.1h4l.4-3.1a8.3 8.3 0 0 0 1.8-1l2.4 1 2-3.4-2-1.5c.1-.3.1-.7.1-1z"/></svg>
+          设置
+        </button>
+      </nav>
+
+      <div class="sheet-mask" id="sheetMask" aria-hidden="true">
+        <aside class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+          <div class="sheet-head">
+            <h2 id="sheetTitle">添加单品</h2>
+            <button class="close" type="button" data-close-sheet aria-label="关闭">×</button>
+          </div>
+          <div class="stack">
+            <div class="upload-box">点击选择照片<br><span class="muted">自然光、干净背景效果更好</span></div>
+            <div class="field"><label for="newItemName">名称</label><input id="newItemName" value="浅灰外套"></div>
+            <div class="field">
+              <label for="newItemType">类型</label>
+              <select id="newItemType"><option>外套</option><option>上装</option><option>下装</option><option>鞋履</option></select>
+            </div>
+            <button class="primary-button" type="button" id="addItemButton">加入衣橱</button>
+          </div>
+        </aside>
+      </div>
+
+      <div class="sheet-mask" id="detailMask" aria-hidden="true">
+        <aside class="sheet" role="dialog" aria-modal="true" aria-labelledby="detailTitle">
+          <div class="sheet-head">
+            <h2 id="detailTitle">单品详情</h2>
+            <button class="close" type="button" data-close-detail aria-label="关闭">×</button>
+          </div>
+          <div class="stack" id="detailContent"></div>
+        </aside>
+      </div>
+
+      <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    </section>
+
+    <aside class="side-note">
+      <h2>交互原型说明</h2>
+      <p>这是按当前截图方向制作的 HTML 预览：保留原型里的米白外壳、深绿建议卡、双操作卡、状态与洞察信息层级，并扩展到完整移动 App 流程。</p>
+      <ul>
+        <li>底部 Tab 可切换五个页面</li>
+        <li>生成穿搭会创建结果并跳到穿搭页</li>
+        <li>添加单品会更新衣橱数量和卡片</li>
+        <li>衣橱卡片可打开详情底部面板</li>
+      </ul>
+    </aside>
+  </main>
+
+  <script>
+    const wardrobeItems = [
+      { name: "雾绿亚麻衬衫", meta: "上装 · 绿色", status: "可穿", type: "ready", color: "#7c8f7a", bg: "#e6ddd2" },
+      { name: "深蓝直筒裤", meta: "下装 · 蓝色", status: "可穿", type: "ready", color: "#263246", bg: "#dce7f6" },
+      { name: "陶土针织衫", meta: "上装 · 橘红", status: "收藏", type: "favorite", color: "#d15b45", bg: "#f3e8df" },
+      { name: "黑色轻外套", meta: "外套 · 黑色", status: "需清洗", type: "wash", color: "#111827", bg: "#e9ecef" }
+    ];
+
+    const outfits = [
+      { title: "通勤 · 亚麻衬衫套装", status: "待反馈", date: "今天 08:30", note: "轻薄、干净，适合多云但体感偏暖的工作日。" },
+      { title: "休闲 · 陶土针织搭配", status: "已接受", date: "昨天 19:10", note: "提高暖色比例，适合晚间外出。" }
+    ];
+
+    let activeFilter = "all";
+
+    const screens = document.querySelectorAll(".screen");
+    const tabs = document.querySelectorAll(".tab");
+    const toast = document.getElementById("toast");
+    const sheetMask = document.getElementById("sheetMask");
+    const detailMask = document.getElementById("detailMask");
+    const wardrobeGrid = document.getElementById("wardrobeGrid");
+    const outfitList = document.getElementById("outfitList");
+
+    function icon(color, kind = "shirt") {
+      if (kind === "pants") {
+        return `<svg viewBox="0 0 100 100" aria-hidden="true"><path d="M28 17h44l10 70H59L50 39l-9 48H18z" fill="${color}"/></svg>`;
+      }
+      return `<svg viewBox="0 0 100 100" aria-hidden="true"><path d="M25 27 38 17h24l13 10-9 16-8-5v43H42V38l-8 5z" fill="${color}"/></svg>`;
+    }
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add("show");
+      window.clearTimeout(showToast.timer);
+      showToast.timer = window.setTimeout(() => toast.classList.remove("show"), 1800);
+    }
+
+    function setScreen(name) {
+      screens.forEach(screen => screen.classList.toggle("active", screen.dataset.screen === name));
+      tabs.forEach(tab => tab.classList.toggle("active", tab.dataset.tab === name));
+      if (location.hash.slice(1) !== name) {
+        history.replaceState(null, "", `#${name}`);
+      }
+    }
+
+    function renderWardrobe() {
+      const query = document.getElementById("wardrobeSearch").value.trim().toLowerCase();
+      const items = wardrobeItems.filter(item => {
+        const matchesFilter = activeFilter === "all" || item.type === activeFilter;
+        const matchesSearch = !query || `${item.name} ${item.meta}`.toLowerCase().includes(query);
+        return matchesFilter && matchesSearch;
+      });
+
+      wardrobeGrid.innerHTML = items.map((item, index) => `
+        <button class="item-card" type="button" data-item="${index}">
+          <span class="item-art" style="background:${item.bg}">${icon(item.color, item.meta.includes("下装") ? "pants" : "shirt")}</span>
+          <span class="item-body">
+            <strong>${item.name}</strong>
+            <span>${item.meta}</span>
+            <span class="badge ${item.type === "wash" ? "warn" : ""}">${item.status}</span>
+          </span>
+        </button>
+      `).join("");
+    }
+
+    function renderOutfits() {
+      outfitList.innerHTML = outfits.map(outfit => `
+        <article class="card outfit-card">
+          <div class="outfit-row">
+            <h2>${outfit.title}</h2>
+            <span class="badge ${outfit.status === "待反馈" ? "warn" : ""}">${outfit.status}</span>
+          </div>
+          <p class="muted">${outfit.date}</p>
+          <div class="thumbs">
+            <span class="thumb">${icon("#7c8f7a")}</span>
+            <span class="thumb">${icon("#263246", "pants")}</span>
+            <span class="thumb">${icon("#111827")}</span>
+          </div>
+          <p class="muted">${outfit.note}</p>
+        </article>
+      `).join("");
+    }
+
+    tabs.forEach(tab => tab.addEventListener("click", () => setScreen(tab.dataset.tab)));
+
+    document.querySelectorAll("[data-open-sheet='add']").forEach(button => {
+      button.addEventListener("click", () => {
+        sheetMask.classList.add("open");
+        sheetMask.setAttribute("aria-hidden", "false");
+      });
+    });
+
+    document.querySelector("[data-close-sheet]").addEventListener("click", () => {
+      sheetMask.classList.remove("open");
+      sheetMask.setAttribute("aria-hidden", "true");
+    });
+
+    document.querySelector("[data-close-detail]").addEventListener("click", () => {
+      detailMask.classList.remove("open");
+      detailMask.setAttribute("aria-hidden", "true");
+    });
+
+    document.getElementById("addItemButton").addEventListener("click", () => {
+      const name = document.getElementById("newItemName").value || "新单品";
+      const type = document.getElementById("newItemType").value;
+      wardrobeItems.unshift({ name, meta: `${type} · 浅灰`, status: "可穿", type: "ready", color: "#8e99a8", bg: "#eef0f2" });
+      document.getElementById("wardrobeCount").textContent = String(Number(document.getElementById("wardrobeCount").textContent) + 1);
+      sheetMask.classList.remove("open");
+      renderWardrobe();
+      showToast("已加入衣橱");
+    });
+
+    document.querySelectorAll("[data-generate]").forEach(button => {
+      button.addEventListener("click", () => {
+        outfits.unshift({
+          title: "通勤 · 深色直筒裤套装",
+          status: "待反馈",
+          date: "刚刚",
+          note: "亚麻衬衫负责透气，深色直筒裤保持利落，外套应对早晚风。"
+        });
+        document.getElementById("pendingCount").textContent = String(Number(document.getElementById("pendingCount").textContent) + 1);
+        renderOutfits();
+        setScreen("outfits");
+        showToast("已生成新穿搭");
+      });
+    });
+
+    document.querySelectorAll("[data-filter]").forEach(button => {
+      button.addEventListener("click", () => {
+        document.querySelectorAll("[data-filter]").forEach(item => item.classList.remove("active"));
+        button.classList.add("active");
+        activeFilter = button.dataset.filter;
+        renderWardrobe();
+      });
+    });
+
+    document.getElementById("wardrobeSearch").addEventListener("input", renderWardrobe);
+
+    wardrobeGrid.addEventListener("click", event => {
+      const card = event.target.closest("[data-item]");
+      if (!card) return;
+      const item = wardrobeItems[Number(card.dataset.item)];
+      document.getElementById("detailContent").innerHTML = `
+        <div class="item-art" style="height:190px;border-radius:8px;background:${item.bg}">${icon(item.color, item.meta.includes("下装") ? "pants" : "shirt")}</div>
+        <article class="card stack">
+          <h2>${item.name}</h2>
+          <p class="muted">${item.meta}</p>
+          <span class="badge ${item.type === "wash" ? "warn" : ""}">${item.status}</span>
+        </article>
+        <button class="primary-button" type="button" data-toast="已保存修改">保存修改</button>
+      `;
+      detailMask.classList.add("open");
+      detailMask.setAttribute("aria-hidden", "false");
+    });
+
+    document.addEventListener("click", event => {
+      const target = event.target.closest("[data-toast]");
+      if (target) showToast(target.dataset.toast);
+    });
+
+    document.querySelectorAll("#occasionChips .chip, #outfitFilters .chip").forEach(button => {
+      button.addEventListener("click", () => {
+        button.parentElement.querySelectorAll(".chip").forEach(item => item.classList.remove("active"));
+        button.classList.add("active");
+      });
+    });
+
+    renderWardrobe();
+    renderOutfits();
+
+    const initialScreen = location.hash.slice(1);
+    if ([...screens].some(screen => screen.dataset.screen === initialScreen)) {
+      setScreen(initialScreen);
+    }
+  </script>
+</body>
+</html>

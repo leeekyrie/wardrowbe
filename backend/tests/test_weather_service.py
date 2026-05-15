@@ -8,13 +8,13 @@ import redis.asyncio as aioredis
 
 from app.services.weather_service import (
     CACHE_PREFIX,
-    WMO_CODES,
+    QWEATHER_ICON_CODES,
     WeatherData,
     WeatherService,
     WeatherServiceError,
 )
 
-FAKE_REQUEST = httpx.Request("GET", "https://api.open-meteo.com/v1/forecast")
+FAKE_REQUEST = httpx.Request("GET", "https://devapi.qweather.com/v7/weather/now")
 
 
 def _mock_response(status_code: int = 200, json_data: dict | None = None) -> httpx.Response:
@@ -22,29 +22,39 @@ def _mock_response(status_code: int = 200, json_data: dict | None = None) -> htt
 
 
 SAMPLE_API_RESPONSE = {
-    "current": {
-        "temperature_2m": 22.5,
-        "apparent_temperature": 21.0,
-        "relative_humidity_2m": 65,
-        "precipitation": 0.0,
-        "weather_code": 2,
-        "wind_speed_10m": 12.3,
-        "is_day": 1,
-        "uv_index": 5.0,
-    },
-    "hourly": {
-        "precipitation_probability": [30],
+    "code": "200",
+    "now": {
+        "obsTime": "2026-02-28T12:00+08:00",
+        "temp": "22.5",
+        "feelsLike": "21.0",
+        "humidity": "65",
+        "precip": "0.0",
+        "icon": "102",
+        "text": "Partly Cloudy",
+        "windSpeed": "12.3",
     },
 }
 
 SAMPLE_FORECAST_RESPONSE = {
-    "daily": {
-        "time": ["2026-02-28", "2026-03-01"],
-        "temperature_2m_max": [18.0, 22.0],
-        "temperature_2m_min": [8.0, 12.0],
-        "precipitation_probability_max": [10, 40],
-        "weather_code": [0, 61],
-    },
+    "code": "200",
+    "daily": [
+        {
+            "fxDate": "2026-02-28",
+            "tempMax": "18.0",
+            "tempMin": "8.0",
+            "precip": "0.0",
+            "iconDay": "100",
+            "textDay": "Sunny",
+        },
+        {
+            "fxDate": "2026-03-01",
+            "tempMax": "22.0",
+            "tempMin": "12.0",
+            "precip": "2.1",
+            "iconDay": "305",
+            "textDay": "Light Rain",
+        },
+    ],
 }
 
 
@@ -158,14 +168,15 @@ class TestValidateCoordinates:
 
 class TestInterpretWeatherCode:
     def test_known_code(self, weather_service):
-        assert weather_service._interpret_weather_code(0) == "sunny"
-        assert weather_service._interpret_weather_code(95) == "thunderstorm"
+        assert weather_service._interpret_weather_code(100) == "sunny"
+        assert weather_service._interpret_weather_code(302) == "thunderstorm"
 
     def test_unknown_code(self, weather_service):
         assert weather_service._interpret_weather_code(999) == "unknown"
+        assert weather_service._interpret_weather_code(999, "Light Rain") == "light rain"
 
     def test_all_codes_mapped(self, weather_service):
-        for code, condition in WMO_CODES.items():
+        for code, condition in QWEATHER_ICON_CODES.items():
             assert weather_service._interpret_weather_code(code) == condition
 
 
@@ -179,9 +190,9 @@ class TestGetCurrentWeather:
         assert result.temperature == 22.5
         assert result.feels_like == 21.0
         assert result.humidity == 65
-        assert result.precipitation_chance == 30
+        assert result.precipitation_chance == 0
         assert result.condition == "partly cloudy"
-        assert result.condition_code == 2
+        assert result.condition_code == 102
         assert result.is_day is True
 
     @pytest.mark.asyncio
@@ -227,8 +238,11 @@ class TestGetCurrentWeather:
     @pytest.mark.asyncio
     async def test_handles_missing_hourly_precipitation(self, weather_service, mock_redis):
         response_data = {
-            "current": SAMPLE_API_RESPONSE["current"],
-            "hourly": {"precipitation_probability": []},
+            "code": "200",
+            "now": {
+                **SAMPLE_API_RESPONSE["now"],
+                "precip": "",
+            },
         }
         mock_response = _mock_response(json_data=response_data)
         with patch("httpx.AsyncClient.get", return_value=mock_response):
@@ -249,6 +263,7 @@ class TestGetDailyForecast:
         assert result[0].temp_max == 18.0
         assert result[0].condition == "sunny"
         assert result[1].condition == "light rain"
+        assert result[1].precipitation_chance == 100
 
     @pytest.mark.asyncio
     async def test_caps_days_at_16(self, weather_service, mock_redis):
@@ -256,8 +271,27 @@ class TestGetDailyForecast:
         with patch("httpx.AsyncClient.get", return_value=mock_response) as mock_get:
             await weather_service.get_daily_forecast(40.71, -74.01, days=30)
 
-        call_params = mock_get.call_args[1]["params"]
-        assert call_params["forecast_days"] == 16
+        call_url = mock_get.call_args[0][0]
+        assert call_url.endswith("/v7/weather/30d")
+
+    @pytest.mark.asyncio
+    async def test_returns_cached_forecast(self, weather_service, mock_redis):
+        cached = [
+            {
+                "date": "2026-02-28",
+                "temp_min": 8.0,
+                "temp_max": 18.0,
+                "precipitation_chance": 0,
+                "condition": "sunny",
+                "condition_code": 100,
+            }
+        ]
+        mock_redis.get.return_value = json.dumps(cached)
+
+        result = await weather_service.get_daily_forecast(40.71, -74.01, days=1)
+
+        assert result[0].condition == "sunny"
+        mock_redis.set.assert_not_called()
 
     @pytest.mark.asyncio
     async def test_raises_on_api_error(self, weather_service, mock_redis):
@@ -279,12 +313,12 @@ class TestGetTomorrowWeather:
         assert result.temperature == 17.0  # avg of 12.0 and 22.0
         assert result.feels_like == 22.0  # max temp
         assert result.condition == "light rain"
-        assert result.precipitation_chance == 40
+        assert result.precipitation_chance == 100
         assert result.is_day is True
 
     @pytest.mark.asyncio
     async def test_falls_back_to_current_weather(self, weather_service, mock_redis):
-        empty_forecast = {"daily": {"time": []}}
+        empty_forecast = {"code": "200", "daily": []}
         mock_forecast_response = _mock_response(json_data=empty_forecast)
         mock_current_response = _mock_response(json_data=SAMPLE_API_RESPONSE)
 
@@ -306,7 +340,7 @@ class TestGetTomorrowWeather:
 class TestCheckHealth:
     @pytest.mark.asyncio
     async def test_healthy(self, weather_service):
-        mock_response = _mock_response()
+        mock_response = _mock_response(json_data={"code": "200"})
         with patch("httpx.AsyncClient.get", return_value=mock_response):
             result = await weather_service.check_health()
         assert result["status"] == "healthy"
